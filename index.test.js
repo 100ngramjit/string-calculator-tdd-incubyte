@@ -53,3 +53,27 @@ test("should handle multiple delimiters", () => {
   expect(add("//[;][,]\n1;2,3")).toBe(6);
   expect(add("//[a][b][c]\n1a2b3c4")).toBe(10);
 });
+
+describe("Multi-character delimiter support", () => {
+  test("should handle multiple multi-character delimiters", () => {
+    expect(add("//[***][%%]\n1***2%%3")).toBe(6);
+    expect(add("//[abc][xyz]\n1abc2xyz3")).toBe(6);
+    expect(add("//[::][--]\n5::10--15")).toBe(30);
+  });
+
+  test("should handle delimiters with special regex characters", () => {
+    expect(add("//[a.b][c*d]\n1a.b2c*d3")).toBe(6);
+    expect(add("//[()][+-]\n1()2+-3")).toBe(6);
+    expect(add("//[+++][---]\n1+++2---3")).toBe(6);
+  });
+
+  test("should handle three or more multi-character delimiters", () => {
+    expect(add("//[ab][cd][ef]\n1ab2cd3ef4")).toBe(10);
+    expect(add("//[::][;;][,,]\n5::10;;15,,20")).toBe(50);
+  });
+
+  test("should handle single multi-character delimiter", () => {
+    expect(add("//[***]\n1***2***3")).toBe(6);
+    expect(add("//[abc]\n10abc20abc30")).toBe(60);
+  });
+});
